@@ -1,0 +1,14 @@
+{
+  "required": true,
+  "minVersion": "0.8",
+  "package": "gay.marie_the.twoweeks.mixin",
+  "compatibilityLevel": "JAVA_17",
+  "mixins": [],
+  "client": [
+    "HealthBarMixin",
+    "HotBarMixin"
+  ],
+  "injectors": {
+    "defaultRequire": 1
+	}
+}
