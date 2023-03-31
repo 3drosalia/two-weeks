@@ -5,10 +5,10 @@
 		"id": "twoweeks",
 		"version": "${version}",
 		"metadata": {
-			"name": "Health by the (Week)2",
-			"description": "Adds a peculiar health bar",
+			"name": "Two Weeks HUD",
+			"description": "Changes the HUD to a familiar game's HUD",
 			"contributors": {
-				"marie": "Author"
+				"marie0llie": "Author"
 			},
 			"contact": {
 				"homepage": "https://marie-the.gay/",
