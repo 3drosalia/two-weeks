@@ -4,15 +4,13 @@ import com.mojang.blaze3d.glfw.Window;
 import com.mojang.blaze3d.systems.RenderSystem;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.font.TextRenderer;
-import net.minecraft.client.gui.DrawableHelper;
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.hud.InGameHud;
 import net.minecraft.client.render.GameRenderer;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.MathHelper;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
@@ -34,18 +32,7 @@ public abstract class HealthBarMixin {
 
 	@Inject(method = "renderHealthBar", at = @At("HEAD"), cancellable = true)
 	public void HealthBarRenderer(
-		MatrixStack matrices,
-		PlayerEntity player,
-		int x,
-		int y,
-		int lines,
-		int regeneratingHeartIndex,
-		float maxHealth,
-		int lastHealth,
-		int health,
-		int absorption,
-		boolean blinking,
-		CallbackInfo ci) {
+		GuiGraphics graphics, PlayerEntity player, int x, int y, int lines, int regeneratingHeartIndex, float maxHealth, int lastHealth, int health, int absorption, boolean blinking, CallbackInfo ci) {
 
 		int hunger = player.getHungerManager().getFoodLevel();
 		// int width = clientWindow.getScaledWidth();
@@ -60,7 +47,7 @@ public abstract class HealthBarMixin {
 		final Identifier TICK = new Identifier("twoweeks", "textures/tick.png");
 		final Identifier SMALL_TICK = new Identifier("twoweeks", "textures/smalltick.png");
 
-		if (client != null){
+		if (client != null) {
 			Window clientWindow = MinecraftClient.getInstance().getWindow();
 			int height = clientWindow.getScaledHeight();
 			x = 30;
@@ -71,7 +58,6 @@ public abstract class HealthBarMixin {
 		int hungerY = shieldY - 4;
 		// Empty health bar
 		RenderSystem.setShader(GameRenderer::getPositionTexShader);
-		RenderSystem.setShaderTexture(0, FILLED_BAR);
 
 		// shadow
 		// TODO : make it not use the fucking empty healthbar background you fucking idiot
@@ -81,7 +67,7 @@ public abstract class HealthBarMixin {
 		float percent = 100 * lastHealthValue / maxHealth;
 		if (percent == 0) {
 			R = 0.0f;
-		} else if (percent <= 10){
+		} else if (percent <= 10) {
 			R = 1f;
 		} else if (percent <= 15) {
 			R = 0.75f;
@@ -91,7 +77,7 @@ public abstract class HealthBarMixin {
 			R = 0.25f;
 		} else if (percent <= 75) {
 			R = 0.1f;
-		} else if (percent > 75){
+		} else if (percent > 75) {
 			R = 0;
 			G = 0;
 			B = 0;
@@ -103,69 +89,60 @@ public abstract class HealthBarMixin {
 
 		RenderSystem.setShaderTexture(0, BLANK_BAR);
 		RenderSystem.setShaderColor(R,G,B,0.5f);
-		DrawableHelper.drawTexture(matrices, x+1, y+1, 0, 0, 128, 12, 128, 12);
+		graphics.drawTexture(matrices, x+1, y+1, 0, 0, 128, 12, 128, 12);
 
 		*/
 
 		// empty bar
 
-		RenderSystem.setShaderTexture(0, FILLED_BAR);
-		RenderSystem.setShaderColor(R,G,B,0.25f);
+		RenderSystem.setShaderColor(R, G, B, 0.25f);
 		// health bar
-		DrawableHelper.drawTexture(matrices, x, y, 0, 0, 128, 12, 128, 12);
-		RenderSystem.setShaderColor(0f,0f,0f,0.25f);
+		graphics.drawTexture(FILLED_BAR, x, y, 0, 0, 128, 12, 128, 12);
+		RenderSystem.setShaderColor(0f, 0f, 0f, 0.25f);
 		// shield bar
-		DrawableHelper.drawTexture(matrices, x, shieldY, 0, 0, 128, 8, 128, 8);
+		graphics.drawTexture(FILLED_BAR, x, shieldY, 0, 0, 128, 8, 128, 8);
 
 		// hunger bar
-		DrawableHelper.drawTexture(matrices, x, hungerY, 0, 0, 128, 2, 128, 8);
+		graphics.drawTexture(FILLED_BAR, x, hungerY, 0, 0, 128, 2, 128, 8);
 
 		// todo : move back
 		// health change bar
 		if (blinking) {
 			RenderSystem.setShaderColor(1f, 0f, 0f, 1f);
-			DrawableHelper.drawTexture(matrices, x, y, 0, 0, (int) (128 * (health / maxHealth)), 12, 128, 12);
+			graphics.drawTexture(FILLED_BAR, x, y, 0, 0, (int) (128 * (health / maxHealth)), 12, 128, 12);
 		}
 		// health fill
-		RenderSystem.setShaderColor(0.0f,0.9f,0.0f, 1.0f);
-		DrawableHelper.drawTexture(matrices, x, y,0,0, (int) (128 * (lastHealthValue / maxHealth)),12,128,12);
-		RenderSystem.setShaderColor(1f,1f,1f, 1.0f);
-		DrawableHelper.drawTexture(matrices, x, hungerY, 0, 0, (int) (128 * (hunger / 20f)), 2, 128, 8);
+		RenderSystem.setShaderColor(0.0f, 0.9f, 0.0f, 1.0f);
+		graphics.drawTexture(FILLED_BAR, x, y, 0, 0, (int) (128 * (lastHealthValue / maxHealth)), 12, 128, 12);
+		RenderSystem.setShaderColor(1f, 1f, 1f, 1.0f);
+		graphics.drawTexture(FILLED_BAR, x, hungerY, 0, 0, (int) (128 * (hunger / 20f)), 2, 128, 8);
 
 		// cap/tick
 		if (lastHealthValue > 0) {
-			RenderSystem.setShaderTexture(0, TICK);
 			RenderSystem.setShaderColor(0.6f, 1f, 0.6f, 0.5f);
-			DrawableHelper.drawTexture(matrices, x + ((int) (128 * (lastHealthValue / maxHealth)) - 4), y, 0, 0, 4, 12, 4, 12);
+			graphics.drawTexture(TICK, x + ((int) (128 * (lastHealthValue / maxHealth)) - 4), y, 0, 0, 4, 12, 4, 12);
 		}
 		// health amount (in %)
 		TextRenderer renderer = MinecraftClient.getInstance().textRenderer;
-		DrawableHelper.drawStringWithShadow(matrices, renderer, Integer.toString((int) lastHealthValue), x + 132, y + 2, 0xFFFFFF);
-		DrawableHelper.drawStringWithShadow(matrices, renderer, "+", x - 10, y + 2, 0xFFFFFF);
+		RenderSystem.setShaderColor(1f, 1f, 1f, 1f);
+		graphics.drawShadowedText( renderer, Integer.toString((int) lastHealthValue), x + 132, y + 2, 0xFFFFFF);
+		graphics.drawShadowedText( renderer, "+", x - 10, y + 2, 0xFFFFFF);
 
 		int armor = player.getArmor();
 
-
-
-		RenderSystem.setShaderTexture(0, FILLED_BAR);
-
-		RenderSystem.setShaderColor( 0.0f, 0.0f, 0.0f, 1.0f );
-
-
-
-		RenderSystem.setShaderColor(0.7f , 0.7f, 1.0f, 0.5f);
-		DrawableHelper.drawTexture(matrices, x, shieldY, 0,0, (int) (128 * (armor / 20f)),8,128,12);
-
-		DrawableHelper.drawStringWithShadow(matrices, renderer, Integer.toString((int) armor), x + 132, shieldY, 0xFFFFFF);
-		DrawableHelper.drawStringWithShadow(matrices, renderer, "\uD83D\uDEE1", x - 11, shieldY, 0xFFFFFF);
+		RenderSystem.setShaderColor(0.7f, 0.7f, 1.0f, 0.5f);
+		graphics.drawTexture(FILLED_BAR, x, shieldY, 0, 0, (int) (128 * (armor / 20f)), 8, 128, 12);
+		RenderSystem.setShaderColor(1f, 1f, 1f, 1f);
+		graphics.drawShadowedText(renderer, Integer.toString((int) armor), x + 132, shieldY, 0xFFFFFF);
+		graphics.drawShadowedText(renderer, "\uD83D\uDEE1", x - 11, shieldY, 0xFFFFFF);
 		/*		   _____________________
 				+ |___________________\| 100
 		 */
 		if (armor > 0) {
-			RenderSystem.setShaderTexture(0, SMALL_TICK);
 			RenderSystem.setShaderColor(0.9f, 0.9f, 1f, 1f);
-			DrawableHelper.drawTexture(matrices, x + ((int) (128 * (armor / 20f)) - 4), shieldY, 0, 0, 4, 8, 4, 8);
+			graphics.drawTexture(SMALL_TICK, x + ((int) (128 * (armor / 20f)) - 4), shieldY, 0, 0, 4, 8, 4, 8);
 		}
+		RenderSystem.setShaderColor(1f, 1f, 1f, 1f);
 		ci.cancel();
 	}
 
