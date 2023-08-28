@@ -7,7 +7,6 @@ import net.minecraft.client.font.TextRenderer;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.hud.InGameHud;
 import net.minecraft.client.render.GameRenderer;
-import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.MathHelper;
@@ -29,9 +28,6 @@ public abstract class HealthBarMixin {
 	@Shadow
 	private int lastHealthValue;
 
-	@Shadow
-	public abstract void tick(boolean paused);
-
 	@Inject(method = "renderHealthBar", at = @At("HEAD"), cancellable = true)
 	public void HealthBarRenderer(
 		GuiGraphics graphics, PlayerEntity player, int x, int y, int lines, int regeneratingHeartIndex, float maxHealth, int lastHealth, int health, int absorption, boolean blinking, CallbackInfo ci) {
@@ -39,10 +35,6 @@ public abstract class HealthBarMixin {
 		int hunger = player.getHungerManager().getFoodLevel();
 		// int width = clientWindow.getScaledWidth();
 
-		// health percent
-		double hpercent = 100 * (lastHealthValue / maxHealth);
-		// health number
-		double displayNum = MathHelper.ceil(hpercent);
 
 		final Identifier FILLED_BAR = new Identifier("twoweeks", "textures/full.png");
 		final Identifier BLANK_BAR = new Identifier("twoweeks", "textures/empty.png");
