@@ -1,0 +1,15 @@
+{
+	"required": true,
+	"package": "gay.marie_the.mixin",
+	"compatibilityLevel": "JAVA_17",
+	"mixins": [
+		"HealthBarMixin"
+	],
+	"injectors": {
+		"defaultRequire": 1
+	},
+	"client": [
+		"ChatRaiseMixin",
+		"HotBarMixin"
+	]
+}
