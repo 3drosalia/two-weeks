@@ -3,15 +3,14 @@
 	"id": "two-weeks",
 	"version": "${version}",
 	"name": "two-weeks",
-	"description": "This is an example description! Tell everyone what your mod is about!",
+	"description": "fortnite health bars",
 	"authors": [
-		"Me!"
+		"marie0llie"
 	],
 	"contact": {
-		"homepage": "https://fabricmc.net/",
-		"sources": "https://github.com/FabricMC/fabric-example-mod"
+		"sources": "https://github.com/marie0llie/two-weeks-hud"
 	},
-	"license": "CC0-1.0",
+	"license": "LGPL v3.0",
 	"icon": "assets/two-weeks/icon.png",
 	"environment": "*",
 	"entrypoints": {
@@ -26,9 +25,8 @@
 		"fabricloader": ">=0.14.22",
 		"minecraft": "~1.20.1",
 		"java": ">=17",
-		"fabric-api": "*"
+		"translucencyfix": "2.2.0"
 	},
 	"suggests": {
-		"another-mod": "*"
 	}
 }

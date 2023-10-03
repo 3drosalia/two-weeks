@@ -70,13 +70,13 @@ public class HealthBarRenderer {
 
 		if (type == 1) {
 			graphics.setShaderColor(1, 1, 1, 1);
-			graphics.drawTexture(FILLED_BAR, x, y, 0, 0, (int)(128 * (lastValue / 20f)), barHeight);
+			graphics.drawTexture(FILLED_BAR, x, y, 0, 0, (int)(128 * (lastValue / max)), barHeight);
 
 		}
 
 		// Bar Fill
 		graphics.setShaderColor(r, g, b, 1);
-		graphics.drawTexture(FILLED_BAR, x, y, 0, 0, (int)(128 * (armor / 20f)), barHeight);
+		graphics.drawTexture(FILLED_BAR, x, y, 0, 0, (int)(128 * (armor / max)), barHeight);
 
 		// final Identifier TICK = new Identifier("two-weeks", "textures/bar_cap.png");
 
@@ -89,7 +89,7 @@ public class HealthBarRenderer {
 				MathHelper.clamp(b + 0.2f, 0, 1),
 				1f);
 
-			graphics.drawTexture(FILLED_BAR, (x + ((int) (128 * (armor / 20f)))) -2 , y, 0, 0, 2, barHeight);
+			graphics.drawTexture(FILLED_BAR, (x + ((int) (128 * (armor / max)))) -2 , y, 0, 0, 2, barHeight);
 		}
 
 		graphics.setShaderColor(1, 1, 1, 1);
