@@ -8,8 +8,6 @@ import net.minecraft.util.math.MathHelper;
 
 public class HealthBarRenderer {
 	private static final Identifier FILLED_BAR = new Identifier("two-weeks", "textures/full.png");
-	private static final Identifier BAR_CAP = new Identifier("two-weeks", "textures/bar_cap.png");
-	private static final Identifier EMPTY_BAR = new Identifier("two-weeks", "textures/empty.png");
 	public static void renderFillBar(DrawContext graphics,        // Screen to render on
 									 int x,                       // X position on screen (left, right)
 									 int y,                       // Y position on screen (up, down)
@@ -19,12 +17,13 @@ public class HealthBarRenderer {
 									 float b,                     // blue
 									 boolean smallTick,
 									 float max,
-									 float lastValue,			  // cool fx
-									 int type					  // type of bar (1 is health (advanced), 2 is hunger (simple), 3 is armor (basic))
-									 							  // 1 has a more advanced colored background and is made to track changes in health
-									   							  // 2 has a red glow when under 30% (when you are unable to sprint
-									 							  // 3 has none of the above. Useful for adding extra bars where the amount does not affect
-									 							  // 	health or hunger. I don't know how to explain this well lmao
+									 float lastValue,              // cool fx
+									 int statusEffect,  // status effect
+									 int type                      // type of bar (1 is health (advanced), 2 is hunger (simple), 3 is armor (basic))
+									 // 1 has a more advanced colored background and is made to track changes in health
+									 // 2 has a red glow when under 30% (when you are unable to sprint)
+									 // 3 has none of the above. Useful for adding extra bars where the amount does not affect
+									 // 	health or hunger. I don't know how to explain this well lmao
 						  ) {
 		// ONLY FOR NON-HEALTH. health rendering will be done in another method
 		int barHeight = 12;
@@ -33,7 +32,6 @@ public class HealthBarRenderer {
 
 
 		if (smallTick) {
-			//TICK = new Identifier("twoweeks", "textures/smalltick.png");
 			barHeight = 8;
 			textY -= 2;
 		}
@@ -74,8 +72,27 @@ public class HealthBarRenderer {
 
 		}
 
+		switch(statusEffect) {
+			case 1:
+				graphics.setShaderColor((float) 128 /255, (float) 120 /255, (float) 24 /255, 1);
+				break;
+			case 2:
+				graphics.setShaderColor((float) 43 /255, (float) 43 /255, (float) 43 /255, 1);
+				break;
+			case 3:
+				graphics.setShaderColor(1f,1f,1f,1f);
+				break;
+			case 4:
+				graphics.setShaderColor(0.83f, 0.68f, 0.21f, 1);
+				break;
+			case 5:
+				graphics.setShaderColor((float) 148 /255, (float) 110 /255, (float) 50 /255, 1);
+				break;
+			default:
+				graphics.setShaderColor(r, g, b, 1);
+		}
 		// Bar Fill
-		graphics.setShaderColor(r, g, b, 1);
+
 		graphics.drawTexture(FILLED_BAR, x, y, 0, 0, (int)(128 * (armor / max)), barHeight);
 
 		// final Identifier TICK = new Identifier("two-weeks", "textures/bar_cap.png");
@@ -94,5 +111,12 @@ public class HealthBarRenderer {
 
 		graphics.setShaderColor(1, 1, 1, 1);
 		// minecraft is broken
+	}
+
+	public static void TinyBar(
+			DrawContext graphics
+
+	){
+
 	}
 }
